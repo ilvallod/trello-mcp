@@ -1,0 +1,21 @@
+[project]
+name = "trello-mcp"
+version = "0.1.0"
+description = "A FastMCP stdio server for reading Trello data, writing comments, and renaming lists."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=2.12.0,<3.0.0",
+    "httpx>=0.28.0,<1.0.0",
+    "python-dotenv>=1.0.1,<2.0.0",
+]
+
+[project.scripts]
+trello-mcp = "trello_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = true
