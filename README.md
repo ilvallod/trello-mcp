@@ -33,13 +33,9 @@ uv run trello-mcp
 - `attach_local_image_to_card(card: str, file_path: str, name: str | None = None, mime_type: str | None = None)`
 - `rename_list(list_id: str, new_name: str)`
 
-## Codex setup
+## Coding agent setup
 
-```bash
-uv run --directory /absolute/path/to/trello-mcp trello-mcp
-```
-
-Example config:
+Add this server definition to `.codex/config.toml` or or `~/.claude.json`:
 
 ```toml
 [mcp_servers.trello]
@@ -53,6 +49,10 @@ TRELLO_API_TOKEN = "${TRELLO_API_TOKEN}"
 TRELLO_UPLOAD_ROOTS = "${TRELLO_UPLOAD_ROOTS}"
 ```
 
+```bash
+uv run --directory /absolute/path/to/trello-mcp trello-mcp
+```
+
 ## Optional hardening for local file uploads
 
 The tool `attach_local_image_to_card` can read local files from your machine and upload them to Trello.
@@ -62,3 +62,7 @@ To restrict where files can be read from, set `TRELLO_UPLOAD_ROOTS`:
 ```env
 TRELLO_UPLOAD_ROOTS=/Users/you/Pictures,/Users/you/Desktop/safe-uploads
 ```
+
+## OAuth 2.0 note
+
+The current implementation uses Trello's existing API key token model. Waiting for Trello to ship the OAuth 2.0 support. See Atlassian's RFC-89: [Introducing OAuth2 to Trello](https://community.developer.atlassian.com/t/rfc-89-introducing-oauth2-to-trello/90359).
