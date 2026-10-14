@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from datetime import datetime
-from dataclasses import dataclass
 import mimetypes
 import os
-from pathlib import Path
 import re
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -36,7 +36,7 @@ class TrelloConfig:
     upload_roots: tuple[str, ...] = ()
 
     @classmethod
-    def from_env(cls) -> "TrelloConfig":
+    def from_env(cls) -> TrelloConfig:
         load_dotenv()
 
         api_key = os.getenv("TRELLO_API_KEY", "").strip()

@@ -6,7 +6,6 @@ from fastmcp import FastMCP
 
 from .client import TrelloApiError, TrelloClient, TrelloConfig
 
-
 mcp = FastMCP(
     "Trello MCP",
     instructions=(
