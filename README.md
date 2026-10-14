@@ -6,7 +6,7 @@ A local `stdio` MCP server for Trello built with FastMCP and Python.
 
 ## Setup
 
-```bash
+```bashß
 uv sync
 cp .env.example .env
 ```
@@ -17,13 +17,30 @@ cp .env.example .env
 uv run trello-mcp
 ```
 
+## MCP Inspector
+
+Start it from this project with:
+
+```bash
+npx @modelcontextprotocol/inspector uv --directory /absolute/path/to/trello-mcp run trello-mcp
+```
+
+The Inspector starts a local browser UI and prints a session token in the terminal, along with a URL that already includes the token. The easiest option is to copy and open the full URL printed by the Inspector. Or you can add the token manually if the Inspector UI is already open in **Configuration** > **Proxy Session Token**
+
+## Resources
+
+Read-only Trello data is exposed as MCP resources. Resources are addressed by URI and can be read by MCP clients without treating the operation as a mutating action. Like a GET
+
+- `trello://boards{?include_closed}`
+- `trello://boards/{board_id}/lists{?include_closed}`
+- `trello://lists/{list_id}/cards{?include_closed}`
+- `trello://cards/{card}`
+- `trello://cards/{card}/comments{?limit}`
+
 ## Tools
 
-- `list_boards(include_closed: bool = False)`
-- `list_lists(board_id: str, include_closed: bool = False)`
-- `list_cards(list_id: str, include_closed: bool = False)`
-- `get_card(card: str)`
-- `get_card_comments(card: str, limit: int | None = None)`
+Mutating Trello operations are exposed as MCP tools. Like a POST
+
 - `add_comment(card: str, text: str)`
 - `create_card(list_id: str, name: str, description: str | None = None, due: str | None = None)`
 - `add_member_to_card(card: str, member: str)`

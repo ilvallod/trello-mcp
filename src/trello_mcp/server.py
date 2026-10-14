@@ -24,41 +24,79 @@ def get_client() -> TrelloClient:
     config = TrelloConfig.from_env()
     return TrelloClient(config)
 
+### RESOURCES ###
 
-@mcp.tool
+@mcp.resource(
+    "trello://boards{?include_closed}",
+    name="trello_boards",
+    mime_type="application/json",
+)
 def list_boards(include_closed: bool = False) -> list[dict]:
-    """List Trello boards accessible to the configured account."""
+    """Readable Trello boards accessible to the configured account."""
 
     return get_client().list_boards(include_closed=include_closed)
 
 
-@mcp.tool
+@mcp.resource(
+    "trello://boards/{board_id}/lists{?include_closed}",
+    name="trello_board_lists",
+    mime_type="application/json",
+)
 def list_lists(board_id: str, include_closed: bool = False) -> list[dict]:
-    """List the Trello lists on a board."""
+    """Readable Trello lists on a board."""
 
     return get_client().list_lists(board_id=board_id, include_closed=include_closed)
 
 
-@mcp.tool
+@mcp.resource(
+    "trello://lists/{list_id}/cards{?include_closed}",
+    name="trello_list_cards",
+    mime_type="application/json",
+)
 def list_cards(list_id: str, include_closed: bool = False) -> list[dict]:
-    """List the cards in a Trello list."""
+    """Readable Trello cards in a list."""
 
     return get_client().list_cards(list_id=list_id, include_closed=include_closed)
 
 
-@mcp.tool
+@mcp.resource(
+    "trello://cards/{card}",
+    name="trello_card",
+    mime_type="application/json",
+)
 def get_card(card: str) -> dict:
-    """Get a Trello card by card ID, shortlink, or full Trello card URL."""
+    """Readable Trello card by card ID or shortlink."""
 
     return get_client().get_card(card=card)
 
 
-@mcp.tool
+@mcp.resource(
+    "trello://cards/{card}/comments{?limit}",
+    name="trello_card_comments",
+    mime_type="application/json",
+)
 def get_card_comments(card: str, limit: int | None = None) -> list[dict]:
-    """Get comments from a Trello card by card ID, shortlink, or full URL."""
+    """Readable comments from a Trello card by card ID or shortlink."""
 
     return get_client().get_card_comments(card=card, limit=limit)
 
+### PROMPTS ### 
+
+@mcp.prompt
+def summarize_card(card: str) -> str:
+    return f"""Given the Trello card reference `{card}`, read the resources `trello://cards/{card}` and `trello://cards/{card}/comments`.
+
+Create a summary that helps a teammate quickly understand the card history and what still needs attention.
+
+Include:
+- Current status
+- What has been addressed
+- Decisions made
+- Open issues
+
+Use the comments to reconstruct the discussion over time. Treat newer comments as more relevant for the current state. Do not invent missing details, and explicitly mark uncertain or unresolved items."""
+
+### TOOLS ###
 
 @mcp.tool
 def add_comment(card: str, text: str) -> dict:
